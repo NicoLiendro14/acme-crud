@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from app.views import (
     CoberturaList,
-    registrar_usuario,
+    RegisterView,
     crear_cobertura,
     crear_plan,
     obtener_planes_disponibles,
@@ -26,7 +26,7 @@ from app.views import LoginView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("usuario/", registrar_usuario, name="registrar_usuario"),
+    path("register/", RegisterView.as_view(), name="register"),
     path("cobertura/", crear_cobertura, name="crear_cobertura"),
     path("plan/", crear_plan, name="crear_plan"),
     path(

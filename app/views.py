@@ -4,16 +4,29 @@ from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 
-from .serializers import CoberturaSerializer, PlanSerializer, UsuarioSerializer
+
+from .serializers import (
+    CoberturaSerializer,
+    PlanSerializer,
+    UserSerializer,
+)
 from .models import Cobertura, Plan
 
 from django.contrib.auth.models import User as Usuario
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.auth.models import User
 
 
 class CoberturaList(generics.ListCreateAPIView):
@@ -38,12 +51,55 @@ class PlanDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class UsuarioList(generics.ListCreateAPIView):
     queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
+    serializer_class = UserSerializer
 
 
 class UsuarioDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
+    serializer_class = UserSerializer
+
+
+class RegisterView(APIView):
+    """
+    Vista para el registro de usuarios.
+
+    Permite a los usuarios registrarse y obtener un token de autenticación.
+
+    Métodos:
+    - post: Maneja las solicitudes POST para el registro de usuarios.
+    """
+
+    @permission_classes([])
+    def post(self, request, format=None):
+        """
+        Maneja las solicitudes POST para el registro de usuarios.
+
+        Parámetros:
+        - request: La solicitud HTTP recibida.
+        - format: El formato de la respuesta HTTP.
+
+        Retorna:
+        - Una respuesta HTTP con el token de autenticación.
+        """
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if username and password:
+            # Verificar si el usuario ya existe
+            try:
+                user = User.objects.get(username=username)
+                return Response({"error": "El usuario ya existe."})
+            except User.DoesNotExist:
+                # Crear el usuario si no existe
+                user = User.objects.create_user(username=username, password=password)
+
+                token, _ = Token.objects.get_or_create(user=user)
+
+                return Response({"token": token.key})
+        else:
+            return Response(
+                {"error": "No se proporcionaron nombre de usuario y contraseña."}
+            )
 
 
 class LoginView(ObtainAuthToken):
@@ -76,6 +132,7 @@ class LoginView(ObtainAuthToken):
 
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def obtener_planes_disponibles(request):
     """
     Vista para el endpoint de obtener planes disponibles.
@@ -107,26 +164,6 @@ def obtener_planes_disponibles(request):
     planes_disponibles = Plan.objects.filter(coberturas__in=coberturas_punto)
     serializer = PlanSerializer(planes_disponibles, many=True)
     return Response(serializer.data)
-
-
-@api_view(["POST"])
-def registrar_usuario(request):
-    """
-    Vista para el endpoint de registro de usuarios.
-
-    Permite a los usuarios registrarse en la aplicación.
-
-    Parámetros:
-    - request: La solicitud HTTP recibida.
-
-    Retorna:
-    - Una respuesta HTTP con los datos del usuario registrado o los errores de validación.
-    """
-    serializer = UsuarioSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
