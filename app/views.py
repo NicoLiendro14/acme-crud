@@ -1,4 +1,5 @@
 import json
+
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,9 +10,10 @@ from rest_framework.authtoken.models import Token
 from .serializers import CoberturaSerializer, PlanSerializer, UsuarioSerializer
 from .models import Cobertura, Plan
 
-from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User as Usuario
+from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
+from django.contrib.gis.geos import GEOSGeometry
 
 
 class CoberturaList(generics.ListCreateAPIView):
@@ -125,9 +127,6 @@ def registrar_usuario(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-from django.contrib.gis.geos import GEOSGeometry
 
 
 @api_view(["POST"])
