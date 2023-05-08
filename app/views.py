@@ -11,6 +11,7 @@ from .models import Cobertura, Plan
 
 from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User as Usuario
+from django.contrib.gis.measure import D
 
 
 class CoberturaList(generics.ListCreateAPIView):
@@ -84,11 +85,24 @@ def obtener_planes_disponibles(request):
 
     Retorna:
     - Una respuesta HTTP con la lista de planes disponibles.
+
+    Descripción:
+    - Esta vista recibe la latitud y longitud de la ubicación del usuario en los parámetros de la solicitud GET.
+    - Luego, se crea un punto geográfico a partir de las coordenadas proporcionadas.
+    - A continuación, se filtran las coberturas que contienen el punto geográfico dentro de su polígono utilizando la función `distance_lte` para establecer una distancia máxima de búsqueda.
+    - Después, se recuperan los planes que tienen coberturas en la lista filtrada de coberturas.
+    - Finalmente, se serializa la lista de planes disponibles y se devuelve como respuesta HTTP.
+
+    Nota:
+    - Es necesario que las coberturas se almacenen en la base de datos con sus polígonos correctamente definidos para que la filtración funcione correctamente.
     """
-    latitud = request.data.get("latitud")
-    longitud = request.data.get("longitud")
+    latitud = request.query_params.get("latitud")
+    longitud = request.query_params.get("longitud")
     punto = Point(float(longitud), float(latitud))
-    planes_disponibles = Plan.objects.filter(coberturas__poligono__contains=punto)
+    coberturas_punto = Cobertura.objects.filter(
+        location__distance_lte=(punto, D(m=1000))
+    )
+    planes_disponibles = Plan.objects.filter(coberturas__in=coberturas_punto)
     serializer = PlanSerializer(planes_disponibles, many=True)
     return Response(serializer.data)
 
