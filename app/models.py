@@ -10,6 +10,7 @@ class Direccion(models_django.Model):
     def __str__(self):
         return self.direccion
 
+
 class Cobertura(models_django.Model):
     color = models_django.CharField(blank=True, null=True, max_length=100)
     location = models_gis.GeometryField(blank=False, null=False)
@@ -18,13 +19,13 @@ class Cobertura(models_django.Model):
         return f"Cobertura {self.pk}"
 
     class Meta:
-        db_table = "address"
+        db_table = "cobertura"  # Corrige el nombre de la tabla
+
 
 class Plan(models_django.Model):
-
-    nombre =  models_django.TextField()
+    nombre = models_django.TextField()
     coberturas = models_django.ManyToManyField(Cobertura)
     direcciones = models_django.ManyToManyField(Direccion)
+
     def __str__(self):
         return f"Plan {self.nombre}"
-

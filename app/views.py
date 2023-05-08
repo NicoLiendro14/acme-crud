@@ -125,7 +125,12 @@ def crear_cobertura(request):
     Retorna:
     - Una respuesta HTTP con los datos de la cobertura creada o los errores de validación.
     """
-    serializer = CoberturaSerializer(data=request.data)
+    data = request.data
+    coordinates = data["location"]["coordinates"]
+    longitud, latitud = map(float, coordinates)
+    punto = Point(longitud, latitud)
+    data["location"] = punto
+    serializer = CoberturaSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
