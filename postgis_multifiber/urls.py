@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app.views import (
+    CoberturaList,
     registrar_usuario,
     crear_cobertura,
     crear_plan,
@@ -33,5 +34,6 @@ urlpatterns = [
         obtener_planes_disponibles,
         name="obtener_planes_disponibles",
     ),
+    path("coberturas/", CoberturaList.as_view(), name="cobertura-list"),
     path("login/", LoginView.as_view(), name="login"),
 ]

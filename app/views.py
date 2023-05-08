@@ -1,3 +1,4 @@
+import json
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -84,8 +85,8 @@ def obtener_planes_disponibles(request):
     Retorna:
     - Una respuesta HTTP con la lista de planes disponibles.
     """
-    latitud = request.query_params.get("latitud")
-    longitud = request.query_params.get("longitud")
+    latitud = request.data.get("latitud")
+    longitud = request.data.get("longitud")
     punto = Point(float(longitud), float(latitud))
     planes_disponibles = Plan.objects.filter(coberturas__poligono__contains=punto)
     serializer = PlanSerializer(planes_disponibles, many=True)
@@ -112,12 +113,15 @@ def registrar_usuario(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+from django.contrib.gis.geos import GEOSGeometry
+
+
 @api_view(["POST"])
 def crear_cobertura(request):
     """
     Vista para el endpoint de creación de cobertura.
 
-    Permite a los usuarios crear una nueva cobertura.
+    Permite a los usuarios crear una nueva cobertura con un polígono como ubicación.
 
     Parámetros:
     - request: La solicitud HTTP recibida.
@@ -127,9 +131,8 @@ def crear_cobertura(request):
     """
     data = request.data
     coordinates = data["location"]["coordinates"]
-    longitud, latitud = map(float, coordinates)
-    punto = Point(longitud, latitud)
-    data["location"] = punto
+    poligono = GEOSGeometry(json.dumps({"type": "Polygon", "coordinates": coordinates}))
+    data["location"] = poligono
     serializer = CoberturaSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
@@ -146,6 +149,13 @@ def crear_plan(request):
 
     Parámetros:
     - request: La solicitud HTTP recibida.
+
+    JSON de entrada esperado:
+    {
+        "nombre": string,
+        "precio": float,
+        "coberturas": [integer]
+    }
 
     Retorna:
     - Una respuesta HTTP con los datos del plan creado o los errores de validación.
