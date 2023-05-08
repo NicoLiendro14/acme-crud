@@ -15,7 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from app.views import (
+    registrar_usuario,
+    crear_cobertura,
+    crear_plan,
+    obtener_planes_disponibles,
+)
+from app.views import LoginView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+    path("registrar-usuario/", registrar_usuario, name="registrar_usuario"),
+    path("crear-cobertura/", crear_cobertura, name="crear_cobertura"),
+    path("crear-plan/", crear_plan, name="crear_plan"),
+    path(
+        "obtener-planes-disponibles/",
+        obtener_planes_disponibles,
+        name="obtener_planes_disponibles",
+    ),
+    path("login/", LoginView.as_view(), name="login"),
 ]
