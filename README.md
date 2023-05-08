@@ -13,7 +13,33 @@ Esta es una prueba tecnica en Django que utiliza GIS. Sigue los pasos a continua
 
 3. Cambia al directorio del proyecto:
    ```shell
-   cd <DIRECTORIO_DEL_PROYECTO>
+   cd acme-crud
+# Instalación de OSGeo4W, Postgres y PostGIS
+
+Este repositorio utiliza tecnologías de información geoespacial (GIS) y requiere la instalación de OSGeo4W, Postgres y PostGIS. Sigue los pasos a continuación para configurar tu entorno de desarrollo.
+
+## Instalación de OSGeo4W
+
+1. Descarga el instalador de OSGeo4W desde el siguiente enlace: [https://trac.osgeo.org/osgeo4w/](https://trac.osgeo.org/osgeo4w/).
+
+2. Ejecuta el instalador descargado y sigue las instrucciones del asistente de instalación.
+
+3. Durante la instalación, selecciona los paquetes necesarios para tu proyecto GIS. 
+
+4. Una vez completada la instalación, OSGeo4W estará listo para su uso.
+
+## Instalación de Postgres y PostGIS
+
+1. Para instalar Postgres, sigue las instrucciones de instalación correspondientes a tu sistema operativo desde el sitio web oficial de Postgres: [https://www.postgresql.org/download/](https://www.postgresql.org/download/).
+
+2. Después de instalar Postgres, puedes proceder a la instalación de PostGIS siguiendo los pasos que se detallan en el siguiente enlace: [https://postgis.net/workshops/postgis-intro/installation.html](https://postgis.net/workshops/postgis-intro/installation.html).
+
+3. Sigue las instrucciones proporcionadas en el enlace de instalación de PostGIS para tu sistema operativo específico.
+
+4. Una vez completada la instalación de PostGIS, tendrás todo lo necesario para ejecutar y desarrollar aplicaciones GIS utilizando este repositorio.
+
+
+
 
 ## Configurar las variables de entorno
 1. Crea un archivo .env en el directorio raíz del proyecto.
@@ -21,7 +47,6 @@ Esta es una prueba tecnica en Django que utiliza GIS. Sigue los pasos a continua
 2. Abre el archivo .env y define las variables de entorno necesarias para tu configuración. Por ejemplo:
 
 ```plaintext
-
 DATABASE_NAME=nombre_basedatos
 DATABASE_USER=nombre_usuario
 DATABASE_PASSWORD=contraseña
@@ -40,7 +65,6 @@ GEOS_LIBRARY_PATH=/ruta/geos_library.dll
 2. En la terminal, ejecuta el siguiente comando para instalar las dependencias del proyecto:
 
 ```shell
-
     pip install -r requirements.txt
 ```
 
@@ -61,3 +85,39 @@ GEOS_LIBRARY_PATH=/ruta/geos_library.dll
 3. Abre un navegador web y ve a http://localhost:8000 para acceder a la aplicación.
 
 ¡Listo! Ahora deberías tener el proyecto de Django clonado, las variables de entorno cargadas y el servidor de desarrollo en funcionamiento.
+
+## Convenciones para los Endpoints
+
+Se han respetado las reglas para nombrar y asignar los verbos HTTP correspondientes a cada endpoint. A continuación, se muestra un ejemplo:
+
+- Endpoint para crear un usuario: `POST /usuario`
+- Endpoint para crear un plan: `POST /plan`
+- Etc...
+
+## Documentación de los Endpoints
+
+Cada vista (endpoint) cuenta con un docstring detallado que explica su funcionamiento. Los docstrings incluyen información sobre los parámetros, el comportamiento esperado y la estructura de las respuestas. A continuación, se muestra un ejemplo:
+
+```python
+@api_view(["GET"])
+def obtener_planes_disponibles(request):
+    """
+    Vista para el endpoint de obtener planes disponibles.
+
+    Permite a los usuarios obtener una lista de planes disponibles basados en la ubicación.
+
+    Parámetros:
+    - request: La solicitud HTTP recibida.
+
+    Retorna:
+    - Una respuesta HTTP con la lista de planes disponibles.
+    """
+    # Código de la vista
+```
+
+## Pruebas de la API con Postman
+
+Se incluye una colección de Postman en formato JSON que contiene una serie de solicitudes predefinidas para probar la API. La colección se encuentra en el archivo collection.json en la raíz del proyecto.
+
+Puedes importar esta colección en Postman y utilizar las solicitudes predefinidas para realizar pruebas en la API. Asegúrate de actualizar las URL y los datos según tu entorno de desarrollo.
+
