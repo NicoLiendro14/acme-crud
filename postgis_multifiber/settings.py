@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+# Imports for load .env
+import os
+from dotenv import load_dotenv
 from pathlib import Path
-
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -116,13 +118,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATABASES = {
     "default": {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        "NAME": 'prueba_back',
-        "USER": '',
-        "PASSWORD": '',
-        "HOST": "localhost",
-        "PORT": 5432,
+        "NAME": os.getenv("DATABASE_NAME"),
+        "USER": os.getenv("DATABASE_USER"),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD"),
+        "HOST": os.getenv("HOST"),
+        "PORT": os.getenv("PORT"),
     }    
 }
 
-GDAL_LIBRARY_PATH=r'C:\OSGeo4W\bin\gdal305.dll'
-GEOS_LIBRARY_PATH=r'C:\OSGeo4W\bin\geos_c.dll'
+GDAL_LIBRARY_PATH = os.getenv("GDAL_LIBRARY_PATH")
+GEOS_LIBRARY_PATH = os.getenv("GEOS_LIBRARY_PATH")
