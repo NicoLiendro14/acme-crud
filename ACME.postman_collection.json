@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "b2f74b84-3ec5-418c-87c5-27ec2fa902de",
+		"name": "ACME",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9733863",
+		"_collection_link": "https://solar-space-530651.postman.co/workspace/test~84c55f92-cfd4-4553-9fe0-85870e42e4b9/collection/9733863-b2f74b84-3ec5-418c-87c5-27ec2fa902de?action=share&creator=9733863&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Registrarse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"password\": \"pass123\",\r\n    \"username\": \"hola\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/register/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"register",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"password\": \"pass123\",\r\n    \"username\": \"Usuario4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/login/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear polígonos que indican la cobertura en alguna zona",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"color\": \"Verde\",\r\n  \"location\": {\r\n    \"type\": \"Polygon\",\r\n    \"coordinates\": [\r\n      [\r\n        [10.1234, 20.5678],\r\n        [12.3456, 23.4567],\r\n        [15.6789, 25.4321],\r\n        [10.1234, 20.5678]\r\n      ]\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/cobertura/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"cobertura",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear un plan relacionado a una o varias áreas",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Plan1\",\r\n  \"precio\": 9.99,\r\n  \"coberturas\": [1, 2]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/plan/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"plan",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener todas las coberturas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/coberturas/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"coberturas",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener planes disponibles",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 13dad36f40f7116017bd20c812d555682a6c36c7",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/planes?latitud=10.1234&longitud=20.5678",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"planes"
+					],
+					"query": [
+						{
+							"key": "latitud",
+							"value": "10.1234"
+						},
+						{
+							"key": "longitud",
+							"value": "20.5678"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
