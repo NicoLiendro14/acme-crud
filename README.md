@@ -121,3 +121,36 @@ Se incluye una colección de Postman en formato JSON que contiene una serie de s
 
 Puedes importar esta colección en Postman y utilizar las solicitudes predefinidas para realizar pruebas en la API. Asegúrate de actualizar las URL y los datos según tu entorno de desarrollo.
 
+
+## Iniciar sesión y obtener el token
+
+Para acceder a los endpoints protegidos, primero debes iniciar sesión y obtener un token de acceso. 
+Endpoint de inicio de sesión:
+
+```
+POST /login/
+```
+Enviar una solicitud POST a este endpoint con las credenciales de usuario (nombre de usuario y contraseña) en el cuerpo de la solicitud. Si las credenciales son válidas, la respuesta contendrá un token de acceso.
+
+## Usar el token de acceso
+
+Una vez que tienes el token de acceso, debes incluirlo en los encabezados de tus solicitudes para acceder a los endpoints protegidos.
+
+Ejemplo de encabezado:
+```
+Authorization: Token {token}
+```
+
+Reemplaza `{token}` por el valor real de tu token de acceso.
+
+## Obtener todos los planes
+
+Un ejemplo de endpoint protegido es el que permite obtener todos los planes.
+
+Endpoint para obtener todos los planes:
+```
+GET  /planes?latitud=10.1234&longitud=20.5678
+```
+Para acceder a este endpoint, debes incluir el token de acceso en el encabezado de la solicitud como se mencionó anteriormente. Si el token es válido, recibirás la respuesta con todos los planes disponibles.
+
+Recuerda que debes incluir el token en cada solicitud a los endpoints protegidos para acceder a ellos correctamente.
